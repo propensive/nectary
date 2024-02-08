@@ -113,7 +113,8 @@ O&Uuml;](https://propensive.com/).
 
 ## Name
 
-
+A _nectary_ is the gland of a flower which produces nectar, for consumption by
+bees, or in Latin, _apis_, which is a pun on "APIs".
 
 In general, Scala One project names are always chosen with some rationale,
 however it is usually frivolous. Each name is chosen for more for its
