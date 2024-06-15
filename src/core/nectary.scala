@@ -17,13 +17,16 @@
 package nectary
 
 import fulminate.*
+import anticipation.*
 
 import scala.annotation.*
 import scala.quoted.*
 
+given Realm = realm"nectary"
+
 @experimental
 case class endpoint() extends MacroAnnotation:
-  def transform(using Quotes)(tree: quotes.reflect.Definition): List[quotes.reflect.Definition] =
+  def transform(using Quotes)(tree: quotes.reflect.Definition, companion: Option[quotes.reflect.Definition]): List[quotes.reflect.Definition] =
     import quotes.reflect.*
     tree match
       case classDef@ClassDef(name, ctr, parents, self, body) =>
@@ -41,4 +44,4 @@ case class endpoint() extends MacroAnnotation:
         val newObj = ClassDef.copy(classDef)(name, ctr, parents, self, newDef :: body)
         List(newObj)
       case _ =>
-        fail(msg"The `@endpoint` annotation should be applied to an object")
+        abandon(msg"The `@endpoint` annotation should be applied to an object")
