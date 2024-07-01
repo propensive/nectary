@@ -44,4 +44,4 @@ case class endpoint() extends MacroAnnotation:
         val newObj = ClassDef.copy(classDef)(name, ctr, parents, self, newDef :: body)
         List(newObj)
       case _ =>
-        abandon(msg"The `@endpoint` annotation should be applied to an object")
+        abandon(m"The `@endpoint` annotation should be applied to an object")
