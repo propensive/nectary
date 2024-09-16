@@ -3,11 +3,12 @@
 target nectary/test
 
 repo propensive/probably
+repo propensive/jacinta
 
 project nectary
   module core
     compiler  scala
-    include   fulminate/core rudiments/core
+    include   fulminate/core rudiments/core jacinta/core
     sources   src/core
     main      nectary.run
   
