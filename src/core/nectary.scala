@@ -16,13 +16,59 @@
 
 package nectary
 
-import fulminate.*
 import anticipation.*
+import contingency.*
+import fulminate.*
+import jacinta.*
+import gossamer.*
+import merino.*
+import prepositional.*
+import turbulence.*
+import vacuous.*
 
 import scala.annotation.*
 import scala.quoted.*
 
 given Realm = realm"nectary"
+
+object OpenApiError:
+  enum Reason:
+    case Json, BadRef
+
+  given Reason is Communicable =
+    case Reason.Json   => m"the JSON content could not be parsed"
+    case Reason.BadRef => m"the field was not a reference"
+
+import OpenApiError.Reason
+
+case class OpenApiError(reason: OpenApiError.Reason)
+extends Error(m"Could not read OpenAPI spec becaus $reason")
+
+object OpenApi:
+  def parse[SourceType: Readable by Bytes](source: SourceType): OpenApi raises OpenApiError =
+    tend:
+      case JsonParseError(_, _, _) => OpenApiError(Reason.Json)
+      case JsonError(_)            => OpenApiError(Reason.Json)
+    .within(Json.parse(source).as[OpenApi])
+
+  case class Info(title: Text, description: Text, version: Text)
+  case class Server(url: Text, description: Text)
+  case class Spec(get: Optional[Interaction], post: Optional[Interaction])
+  case class Parameter(name: Text, in: Text, required: Boolean, schema: Json)
+  case class Interaction(summary: Text, parameters: List[Parameter], responses: Map[Text, Json])
+  case class Components()
+
+case class OpenApi(openapi: Text, info: OpenApi.Info, servers: List[OpenApi.Server], paths: Map[Text, OpenApi.Spec], components: OpenApi.Components, security: List[Json], tags: List[Json])
+
+object Ref:
+  given (using Tactic[OpenApiError], Tactic[JsonError]) => Ref is Decodable in Json =
+    summon[Map[Text, Json] is Decodable in Json].map: map =>
+      if map.size != 1 || !map.contains(t"$$ref") then abort(OpenApiError(Reason.BadRef)) else
+        map(t"$$ref").as[Text].cut(t"/") match
+          case t"#" :: more => Ref(more)
+          case _            => abort(OpenApiError(Reason.BadRef))
+
+case class Ref(path: List[Text])
 
 @experimental
 case class endpoint() extends MacroAnnotation:
