@@ -49,7 +49,8 @@ object OpenApi:
     tend:
       case JsonParseError(_, _, _) => OpenApiError(Reason.Json)
       case JsonError(_)            => OpenApiError(Reason.Json)
-    .within(Json.parse(source).as[OpenApi])
+
+    . within(Json.parse(source).as[OpenApi])
 
   case class Info(title: Text, description: Text, version: Text)
   case class Server(url: Text, description: Text)
