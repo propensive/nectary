@@ -19,8 +19,8 @@ package nectary
 import anticipation.*
 import contingency.*
 import fulminate.*
-import jacinta.*
 import gossamer.*
+import jacinta.*
 import merino.*
 import prepositional.*
 import turbulence.*
