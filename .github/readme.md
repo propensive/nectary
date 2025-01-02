@@ -23,6 +23,7 @@ TBC
 
 
 
+
 ## Getting Started
 
 TBC
@@ -133,6 +134,6 @@ droplet alluding to the cellular structure of a beehive.
 
 ## License
 
-Nectary is copyright &copy; 2024 Jon Pretty & Propensive O&Uuml;, and
+Nectary is copyright &copy; 2025 Jon Pretty & Propensive O&Uuml;, and
 is made available under the [Apache 2.0 License](/license.md).
 
