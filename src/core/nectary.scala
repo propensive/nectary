@@ -59,7 +59,14 @@ object OpenApi:
   case class Interaction(summary: Text, parameters: List[Parameter], responses: Map[Text, Json])
   case class Components()
 
-case class OpenApi(openapi: Text, info: OpenApi.Info, servers: List[OpenApi.Server], paths: Map[Text, OpenApi.Spec], components: OpenApi.Components, security: List[Json], tags: List[Json])
+case class OpenApi
+   (openapi:    Text,
+    info:       OpenApi.Info,
+    servers:    List[OpenApi.Server],
+    paths:      Map[Text, OpenApi.Spec],
+    components: OpenApi.Components,
+    security:   List[Json],
+    tags:       List[Json])
 
 object Ref:
   given (using Tactic[OpenApiError], Tactic[JsonError]) => Ref is Decodable in Json =
@@ -73,7 +80,9 @@ case class Ref(path: List[Text])
 
 @experimental
 case class endpoint() extends MacroAnnotation:
-  def transform(using Quotes)(tree: quotes.reflect.Definition, companion: Option[quotes.reflect.Definition]): List[quotes.reflect.Definition] =
+  def transform(using Quotes)(tree: quotes.reflect.Definition, companion: Option[quotes.reflect.Definition])
+  :     List[quotes.reflect.Definition] =
+
     import quotes.reflect.*
     tree match
       case classDef@ClassDef(name, ctr, parents, self, body) =>
@@ -90,5 +99,6 @@ case class endpoint() extends MacroAnnotation:
         val newDef = DefDef(sym, _ => Some(Literal(IntConstant(42))))
         val newObj = ClassDef.copy(classDef)(name, ctr, parents, self, newDef :: body)
         List(newObj)
+
       case _ =>
         halt(m"The `@endpoint` annotation should be applied to an object")
